@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<!-- saved from url=(0034)http://localhost:3999/dont.slide#1 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Don't do this!</title>
+    
+    <script>
+      var notesEnabled =  false ;
+    </script>
+    <script src="./Don&#39;t do this!_files/slides.js"></script>
+
+    
+
+    <script>
+      
+      if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
+        var _gaq = _gaq || [];
+        _gaq.push(["_setAccount", "UA-11222381-6"]);
+        _gaq.push(["b._setAccount", "UA-49880327-6"]);
+        window.trackPageview = function() {
+          _gaq.push(["_trackPageview", location.pathname+location.hash]);
+          _gaq.push(["b._trackPageview", location.pathname+location.hash]);
+        };
+        window.trackPageview();
+        window.trackEvent = function(category, action, opt_label, opt_value, opt_noninteraction) {
+          _gaq.push(["_trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
+          _gaq.push(["b._trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
+        };
+      }
+    </script>
+  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1"><meta name="apple-mobile-web-app-capable" content="yes"></head>
+
+  <body style="display: none" class="loaded">
+
+    <section class="slides layout-widescreen" style="transform: scale(0.7392);">
+
+      <article class="current">
+        <h1>Don't do this!</h1>
+        <h3>Stupid things you can do with golang</h3>
+        
+        
+          <div class="presenter">
+            
+  
+  <p>
+    Mihail Mikov
+  </p>
+  
+
+  
+  <p>
+    25.03.2025
+  </p>
+  
+
+          </div>
+        
+      </article>
+
+  
+  
+      <article class="next">
+      
+        <h3>defer</h3>
+        <p>Deffered functions are executed in <strong>reverse</strong> order.
+Also everything after the <code>;</code> isn't actually deffered</p>
+
+  <div class="code" contenteditable="true" spellcheck="false">
+<pre contenteditable="true" spellcheck="false"><span num="17">func x1() {</span>
+<span num="18">    defer a("x1")</span>
+<span num="19">    defer b("x1")</span>
+<span num="20">    c("x1")</span>
+<span num="21">}</span>
+<span num="22"></span>
+<span num="23">func x2() {</span>
+<span num="24">    <b>defer a("x2"); b("x2")</b></span>
+<span num="25">    c("x2")</span>
+<span num="26">}</span>
+<span num="27"></span>
+<span num="28">func main() {</span>
+<span num="29">    x1()</span>
+<span num="30">    x2()</span>
+<span num="31">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">2</span>
+      </article>
+  
+  
+  
+      <article class="far-next">
+      
+        <h3>special errors</h3>
+        <p>This is a great pattern in theory. Unfortunately, go insists on making it harder...</p>
+
+  <div class="code" contenteditable="true" spellcheck="false">
+<pre contenteditable="true" spellcheck="false"><span num="50">func main() {</span>
+<span num="51">    err := DoSomethingThatMightFail(false)</span>
+<span num="52">    switch e := err.(type) {</span>
+<span num="53">    case reportable:</span>
+<span num="54">        e.Report(context.TODO())</span>
+<span num="55">        fallthrough</span>
+<span num="56">    case retryable:</span>
+<span num="57">        if e.CanRetry() {</span>
+<span num="58">            fmt.Println("try again!")</span>
+<span num="59">        }</span>
+<span num="60">    case error:</span>
+<span num="61">        fmt.Println("any other type of error")</span>
+<span num="62">    default:</span>
+<span num="63">        fmt.Println("nil?", e)</span>
+<span num="64">    }</span>
+<span num="65">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">3</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>functional go</h3>
+        <p>Adopting a functional style in go is possible, but is it desirable?</p>
+<pre><code class="language-go">RunPipe(3*time.Second, func(ctx context.Context, _ func()) {
+  urls := FromFile(ctx, "user_urls.txt")
+  bodies := Parallel(ctx, urls, 10, request)
+  parsed := Parallel(ctx, bodies, 3, parseJSON)
+  admins := Filter(ctx, parsed, isAdmin)
+  entries := Map(ctx, admins, toJSON)
+  err := ToFile(ctx, entries, "admins.txt")
+    if err != nil {
+      return err
+    }
+})
+</code></pre>
+<p>Short answer: no.</p>
+<p>The operators variety would get so broad reading any code would require an immense amount of knowledge.</p>
+
+      
+      <span class="pagenumber">4</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>nested iterators</h3>
+        <p>This doesn't look so bad, right?</p>
+
+  <div class="code" contenteditable="true" spellcheck="false">
+<pre contenteditable="true" spellcheck="false"><span num="38">func main() {</span>
+<span num="39">    chunkedRanges := nestedIterator(1, 10, 3)</span>
+<span num="40"></span>
+<span num="41">    for chunk := range chunkedRanges {</span>
+<span num="42">        fmt.Println("New chunk:")</span>
+<span num="43"></span>
+<span num="44">        // Iterate through the inner iterator</span>
+<span num="45">        for num := range chunk {</span>
+<span num="46">            fmt.Printf("  %d\n", num)</span>
+<span num="47">        }</span>
+<span num="48">    }</span>
+<span num="49">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">5</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>nested iterators: implementation</h3>
+        <p>until you look under the hood 😱</p>
+
+  <div class="code">
+<pre><span num="20">func nestedIterator(start, end, size int) iter.Seq[iter.Seq[int]] {</span>
+<span num="21">    return func(yield func(iter.Seq[int]) bool) {</span>
+<span num="22">        for i := start; i &lt;= end; i += size {</span>
+<span num="23">            nestedEnd := i + size - 1</span>
+<span num="24">            if nestedEnd &gt; end {</span>
+<span num="25">                nestedEnd = end</span>
+<span num="26">            }</span>
+<span num="27"></span>
+<span num="28">            // rangeIterator is another, similar iterator func</span>
+<span num="29">            <b>subRange := rangeIterator(i, nestedEnd)</b></span>
+<span num="30"></span>
+<span num="31">            if !yield(subRange) {</span>
+<span num="32">                return</span>
+<span num="33">            }</span>
+<span num="34">        }</span>
+<span num="35">    }</span>
+<span num="36">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">6</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>searching a map</h3>
+        <p>when just getting a key from a map is too simple, but you need to look "smart"</p>
+
+  <div class="code" contenteditable="true" spellcheck="false">
+<pre contenteditable="true" spellcheck="false"><span num="11">func main() {</span>
+<span num="12">    keys := make([]string, 0, len(myMap))</span>
+<span num="13">    values := make([]string, 0, len(myMap))</span>
+<span num="14"></span>
+<span num="15">    for k, v := range myMap {</span>
+<span num="16">        keys = append(keys, k)</span>
+<span num="17">        values = append(values, v)</span>
+<span num="18">    }</span>
+<span num="19"></span>
+<span num="20">    var wantedIndex int</span>
+<span num="21">    for i, k := range keys {</span>
+<span num="22">        if k == "wanted" {</span>
+<span num="23">            wantedIndex = i</span>
+<span num="24">            break</span>
+<span num="25">        }</span>
+<span num="26">    }</span>
+<span num="27"></span>
+<span num="28">    fmt.Println("value:", values[wantedIndex])</span>
+<span num="29">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">7</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>floats</h3>
+        <p>As with any language that uses the IEEE 754, floats are "fun"</p>
+
+  <div class="code" contenteditable="true" spellcheck="false">
+<pre contenteditable="true" spellcheck="false"><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import "fmt"</span>
+<span num="4"></span>
+<span num="5">func smartSumEqual(u, v, w float64) bool {</span>
+<span num="6">    return (u+v == w) || (u == w-v) || (v == w-u)</span>
+<span num="7">}</span>
+<span num="8"></span>
+<span num="9">func actualSolution(u, v, w float64) bool {</span>
+<span num="10">    return u+v-w &lt; 1e-8</span>
+<span num="11">}</span>
+<span num="12"></span>
+<span num="13">func main() {</span>
+<span num="14">    x, y, z := 0.1, 0.2, 0.3</span>
+<span num="15"></span>
+<span num="16">    fmt.Println("x + y == z ?", x+y == z)</span>
+<span num="17">    fmt.Println("'smart' sum equals ?", smartSumEqual(x, y, z))</span>
+<span num="18">    fmt.Println("actual sum equals ?", actualSolution(x, y, z))</span>
+<span num="19">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">8</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>callable structs?!</h3>
+        <p>Just calling some methods on a struct, nothing to see here.. wait, wat?!</p>
+
+  <div class="code" contenteditable="true" spellcheck="false">
+<pre contenteditable="true" spellcheck="false"><span num="19">func main() {</span>
+<span num="20">    myStruct.DoStuff()</span>
+<span num="21">    myStruct.AnotherMethod()</span>
+<span num="22"></span>
+<span num="23">    // WTF!?</span>
+<span num="24">    <b>myStruct()</b></span>
+<span num="25">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">9</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>funcs with methods</h3>
+        <p>Who would do this? (any why?!)</p>
+
+  <div class="code" contenteditable="true" spellcheck="false">
+<pre contenteditable="true" spellcheck="false"><span num="5">type ImAStructTrustMe func()</span>
+<span num="6"></span>
+<span num="7">func (ImAStructTrustMe) DoStuff() {</span>
+<span num="8">    fmt.Println("doing")</span>
+<span num="9">}</span>
+<span num="10"></span>
+<span num="11">func (ImAStructTrustMe) AnotherMethod() {</span>
+<span num="12">    fmt.Println("much lol")</span>
+<span num="13">}</span>
+<span num="14"></span>
+<span num="15">var myStruct ImAStructTrustMe = func() {</span>
+<span num="16">    fmt.Println("WTF?!")</span>
+<span num="17">}</span>
+<span num="18"></span>
+<span num="19">func main() {</span>
+<span num="20">    myStruct.DoStuff()</span>
+<span num="21">    myStruct.AnotherMethod()</span>
+<span num="22"></span>
+<span num="23">    // WTF!?</span>
+<span num="24">    myStruct()</span>
+<span num="25">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">10</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>nil by default</h3>
+        <p>It's pretty easy to forget to initialize a <code>map</code>, <code>slice</code> or <code>chan</code></p>
+
+  <div class="code" contenteditable="true" spellcheck="false">
+<pre contenteditable="true" spellcheck="false"><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">func main() {</span>
+<span num="4">    var myMap map[string]string</span>
+<span num="5"></span>
+<span num="6">    myMap["key"] = "value"</span>
+<span num="7">}</span>
+</pre>
+</div>
+<p>Especially since other values are initialized by default</p>
+
+  <div class="code" contenteditable="true" spellcheck="false">
+<pre contenteditable="true" spellcheck="false"><span num="5">type aStruct struct {</span>
+<span num="6">    anInt   int</span>
+<span num="7">    aString string</span>
+<span num="8">}</span>
+<span num="9"></span>
+<span num="10">func main() {</span>
+<span num="11">    var s aStruct</span>
+<span num="12"></span>
+<span num="13">    fmt.Println(s)</span>
+<span num="14">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">11</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>easy race</h3>
+        <p>This should return 200 every time, right? <strong>right?!</strong></p>
+
+  <div class="code" contenteditable="true" spellcheck="false">
+<pre contenteditable="true" spellcheck="false"><span num="25">func main() {</span>
+<span num="26">    myInt := &amp;SharedInt{}</span>
+<span num="27"></span>
+<span num="28">    wg := sync.WaitGroup{}</span>
+<span num="29">    wg.Add(200)</span>
+<span num="30"></span>
+<span num="31">    for i := 0; i &lt; 200; i += 1 {</span>
+<span num="32">        go func() { myInt.SetVal(myInt.Val() + 1); wg.Done() }()</span>
+<span num="33">    }</span>
+<span num="34"></span>
+<span num="35">    wg.Wait()</span>
+<span num="36">    fmt.Println(myInt.val)</span>
+<span num="37">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">12</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>easy race: internals</h3>
+        <p>This seems correct...</p>
+
+  <div class="code">
+<pre><span num="8">type SharedInt struct {</span>
+<span num="9">    mu  sync.Mutex</span>
+<span num="10">    val int</span>
+<span num="11">}</span>
+<span num="12"></span>
+<span num="13">func (si *SharedInt) Val() int {</span>
+<span num="14">    si.mu.Lock()</span>
+<span num="15">    defer si.mu.Unlock() // 🔒</span>
+<span num="16">    return si.val        // 🔒</span>
+<span num="17">}</span>
+<span num="18"></span>
+<span num="19">func (si *SharedInt) SetVal(val int) {</span>
+<span num="20">    si.mu.Lock()</span>
+<span num="21">    defer si.mu.Unlock() // 🔒</span>
+<span num="22">    si.val = val         // 🔒</span>
+<span num="23">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">13</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>easy race: what is actually going on</h3>
+        <p>While this pattern is common in other languages (hi, Java). It doesn't really work in go</p>
+<pre><code class="language-go">v := myInt.Val()
+v += 1 // 😱😱😱
+myInt.SetVal(v)
+</code></pre>
+
+      
+      <span class="pagenumber">14</span>
+      </article>
+  
+  
+
+      <article>
+        <h3>Thank you</h3>
+        
+          <div class="presenter">
+            
+  
+  <p>
+    Mihail Mikov
+  </p>
+  
+
+  
+  <p>
+    25.03.2025
+  </p>
+  
+
+          </div>
+        
+      </article>
+
+    <div class="slide-area" id="prev-slide-area"></div><div class="slide-area" id="next-slide-area"></div></section>
+
+    <div id="help" style="display: none;">
+      Use the left and right arrow keys or click the left and right
+      edges of the page to navigate between slides.<br>
+      (Press 'H' or navigate to hide this message.)
+    </div>
+
+    
+
+    <script>
+      (function() {
+        
+        if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
+          var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true;
+          ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
+          var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
+        }
+      })();
+    </script>
+  
+
+<link rel="stylesheet" type="text/css" href="./Don&#39;t do this!_files/css"><link rel="stylesheet" type="text/css" href="./Don&#39;t do this!_files/styles.css"></body></html>

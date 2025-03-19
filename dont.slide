@@ -1,0 +1,109 @@
+# Don't do this!
+Stupid things you can do with golang
+
+Mihail Mikov
+25.03.2025
+
+## defer
+
+Deffered functions are executed in **reverse** order.
+Also everything after the `;` isn't actually deffered
+
+.play -edit defer.go /^func x1/, HLxxx
+
+## special errors
+
+This is a great pattern in theory. Unfortunately, go insists on making it harder...
+
+.play -edit special_error.go /^func main/,
+
+## functional go
+
+Adopting a functional style in go is possible, but is it desirable?
+
+```go
+RunPipe(3*time.Second, func(ctx context.Context, _ func()) {
+  urls := FromFile(ctx, "user_urls.txt")
+  bodies := Parallel(ctx, urls, 10, request)
+  parsed := Parallel(ctx, bodies, 3, parseJSON)
+  admins := Filter(ctx, parsed, isAdmin)
+  entries := Map(ctx, admins, toJSON)
+  err := ToFile(ctx, entries, "admins.txt")
+	if err != nil {
+      return err
+	}
+})
+```
+
+Short answer: no.
+
+The operators variety would get so broad reading any code would require an immense amount of knowledge.
+
+## nested iterators
+
+This doesn't look so bad, right?
+
+.play -edit nested_iterators.go /^func main/,
+
+## nested iterators: implementation
+
+until you look under the hood 😱
+
+.code nested_iterators.go /^func nestedIterator/,/^}/ HLxxx
+
+## searching a map
+
+when just getting a key from a map is too simple, but you need to look "smart"
+
+.play -edit ./map_lookup.go /^func main/,
+
+## floats
+
+As with any language that uses the IEEE 754, floats are "fun"
+
+.play -edit ./floats.go
+
+## callable structs?!
+
+Just calling some methods on a struct, nothing to see here.. wait, wat?!
+
+.play -edit ./func_with_methods.go /^func main/, HLxxx
+
+## funcs with methods
+
+Who would do this? (any why?!)
+
+.play -edit ./func_with_methods.go /^type ImAStructTrustMe/,
+
+## nil by default
+
+It's pretty easy to forget to initialize a `map`, `slice` or `chan`
+
+.play -edit ./nil_by_default.go
+
+Especially since other values are initialized by default
+
+.play -edit ./ok_by_default.go /^type/,
+
+## easy race
+
+This should return 200 every time, right? **right?!**
+
+.play -edit ./race.go /^func main/,
+
+## easy race: internals
+
+This seems correct...
+
+.code ./race.go /^type/,24
+
+## easy race: what is actually going on
+
+While this pattern is common in other languages (hi, Java). It doesn't really work in go
+
+```go
+v := myInt.Val()
+v += 1 // 😱😱😱
+myInt.SetVal(v)
+```
+
