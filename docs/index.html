@@ -31,7 +31,7 @@
 
   <body style="display: none" class="loaded">
 
-    <section class="slides layout-widescreen" style="transform: scale(0.7392);">
+    <section class="slides layout-widescreen" style="transform: scale(0.7344);">
 
       <article class="current">
         <h1>Don't do this!</h1>
@@ -64,8 +64,24 @@
         <p>Deffered functions are executed in <strong>reverse</strong> order.
 Also everything after the <code>;</code> isn't actually deffered</p>
 
-  <div class="code" contenteditable="true" spellcheck="false">
-<pre contenteditable="true" spellcheck="false"><span num="17">func x1() {</span>
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre style="display: none"><span>package main
+
+import "fmt"
+
+func a(from string) {
+	fmt.Println(from, ": a")
+}
+
+func b(from string) {
+	fmt.Println(from, ": b")
+}
+
+func c(from string) {
+	fmt.Println(from, ": c")
+}
+
+</span></pre><pre contenteditable="true" spellcheck="false"><span num="17">func x1() {</span>
 <span num="18">    defer a("x1")</span>
 <span num="19">    defer b("x1")</span>
 <span num="20">    c("x1")</span>
@@ -81,7 +97,7 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 <span num="30">    x2()</span>
 <span num="31">}</span>
 </pre>
-</div>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">2</span>
@@ -91,11 +107,166 @@ Also everything after the <code>;</code> isn't actually deffered</p>
   
       <article class="far-next">
       
+        <h3>abusing panic/recover</h3>
+        
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre style="display: none"><span>package main
+
+import "fmt"
+
+type Mountain struct{}
+
+func (m *Mountain) Climb() {
+	fmt.Println("climbing")
+}
+
+</span></pre><pre contenteditable="true" spellcheck="false"><span num="11">func ClimbAllPanicRecover(mountains []Mountain) {</span>
+<span num="12">    defer func() {</span>
+<span num="13">        fmt.Println("ops, went too high...")</span>
+<span num="14">        recover()</span>
+<span num="15">    }()</span>
+<span num="16">    for i := 0; ; i++ {</span>
+<span num="17">        mountains[i].Climb() // panics when i == len(mountains)</span>
+<span num="18">    }</span>
+<span num="19">    fmt.Println("unreachable, even after recover")</span>
+<span num="20">}</span>
+<span num="21"></span>
+<span num="22">func main() {</span>
+<span num="23">    mountains := make([]Mountain, 5)</span>
+<span num="24">    ClimbAllPanicRecover(mountains)</span>
+<span num="25">    fmt.Println("at the peak!")</span>
+<span num="26">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">3</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./Don&#39;t do this!_files/context.jpg">
+</div>
+
+      
+      <span class="pagenumber">4</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>leaky sentinel errors</h3>
+        <p>Sentinel errors aren't bad, but can cause leaky abstractions</p>
+
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre style="display: none"><span>package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+</span></pre><pre contenteditable="true" spellcheck="false"><span num="8">// imagine importing this from a deep dependency</span>
+<span num="9">var myError = errors.New("something went wrong")</span>
+<span num="10"></span>
+<span num="11">func try() error {</span>
+<span num="12">    // imagine calling a deep stack of functions to get to</span>
+<span num="13">    return fmt.Errorf("try: %w", &amp;myError)</span>
+<span num="14">}</span>
+<span num="15"></span>
+<span num="16">func doIt() {</span>
+<span num="17">    err := try()</span>
+<span num="18">    if err != nil {</span>
+<span num="19">        if errors.Is(err, myError) {</span>
+<span num="20">            // we now know the type of the error</span>
+<span num="21">        }</span>
+<span num="22">    }</span>
+<span num="23">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">5</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./Don&#39;t do this!_files/leaky-errors.png">
+</div>
+
+      
+      <span class="pagenumber">6</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
         <h3>special errors</h3>
         <p>This is a great pattern in theory. Unfortunately, go insists on making it harder...</p>
 
-  <div class="code" contenteditable="true" spellcheck="false">
-<pre contenteditable="true" spellcheck="false"><span num="50">func main() {</span>
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre style="display: none"><span>package main
+
+import (
+	"context"
+	"fmt"
+	"sync"
+)
+
+type (
+	reportable interface {
+		Report(ctx context.Context)
+	}
+
+	retryable interface {
+		CanRetry() bool
+	}
+
+	mySpecialError struct {
+		once               sync.Once
+		retries            int
+		importantDebugInfo string
+	}
+)
+
+func (e *mySpecialError) Error() string {
+	return e.importantDebugInfo
+}
+
+func (e *mySpecialError) Report(ctx context.Context) {
+	e.once.Do(func() {
+		fmt.Println(e.Error())
+	})
+}
+
+func (e *mySpecialError) CanRetry() bool {
+	return e.retries &gt; 0
+}
+
+func DoSomethingThatMightFail(b bool) error {
+	if b {
+		return nil
+	}
+
+	return &amp;mySpecialError{
+		retries:            1,
+		importantDebugInfo: "test stuff",
+	}
+}
+
+</span></pre><pre contenteditable="true" spellcheck="false"><span num="50">func main() {</span>
 <span num="51">    err := DoSomethingThatMightFail(false)</span>
 <span num="52">    switch e := err.(type) {</span>
 <span num="53">    case reportable:</span>
@@ -112,10 +283,10 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 <span num="64">    }</span>
 <span num="65">}</span>
 </pre>
-</div>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
-      <span class="pagenumber">3</span>
+      <span class="pagenumber">7</span>
       </article>
   
   
@@ -140,7 +311,21 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 <p>The operators variety would get so broad reading any code would require an immense amount of knowledge.</p>
 
       
-      <span class="pagenumber">4</span>
+      <span class="pagenumber">8</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./Don&#39;t do this!_files/functional.png">
+</div>
+
+      
+      <span class="pagenumber">9</span>
       </article>
   
   
@@ -150,8 +335,45 @@ Also everything after the <code>;</code> isn't actually deffered</p>
         <h3>nested iterators</h3>
         <p>This doesn't look so bad, right?</p>
 
-  <div class="code" contenteditable="true" spellcheck="false">
-<pre contenteditable="true" spellcheck="false"><span num="38">func main() {</span>
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre style="display: none"><span>package main
+
+import (
+	"fmt"
+	"iter"
+)
+
+// Iterator that returns numbers from start to end
+func rangeIterator(start, end int) iter.Seq[int] {
+	return func(yield func(int) bool) {
+		for i := start; i &lt;= end; i++ {
+			if !yield(i) {
+				return
+			}
+		}
+	}
+}
+
+// Iterator that returns other iterators
+func nestedIterator(start, end, size int) iter.Seq[iter.Seq[int]] {
+	return func(yield func(iter.Seq[int]) bool) {
+		for i := start; i &lt;= end; i += size {
+			nestedEnd := i + size - 1
+			if nestedEnd &gt; end {
+				nestedEnd = end
+			}
+
+			// rangeIterator is another, similar iterator func
+			subRange := rangeIterator(i, nestedEnd) // HLxxx
+
+			if !yield(subRange) {
+				return
+			}
+		}
+	}
+}
+
+</span></pre><pre contenteditable="true" spellcheck="false"><span num="38">func main() {</span>
 <span num="39">    chunkedRanges := nestedIterator(1, 10, 3)</span>
 <span num="40"></span>
 <span num="41">    for chunk := range chunkedRanges {</span>
@@ -164,15 +386,15 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 <span num="48">    }</span>
 <span num="49">}</span>
 </pre>
-</div>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
-      <span class="pagenumber">5</span>
+      <span class="pagenumber">10</span>
       </article>
   
   
   
-      <article>
+      <article class="">
       
         <h3>nested iterators: implementation</h3>
         <p>until you look under the hood 😱</p>
@@ -199,18 +421,42 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 </div>
 
       
-      <span class="pagenumber">6</span>
+      <span class="pagenumber">11</span>
       </article>
   
   
   
-      <article>
+      <article class="">
       
-        <h3>searching a map</h3>
-        <p>when just getting a key from a map is too simple, but you need to look "smart"</p>
+        <h3></h3>
+        
+<div class="image">
+  <img src="./Don&#39;t do this!_files/monads.png">
+</div>
 
-  <div class="code" contenteditable="true" spellcheck="false">
-<pre contenteditable="true" spellcheck="false"><span num="11">func main() {</span>
+      
+      <span class="pagenumber">12</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>when all you know is a 🔨</h3>
+        <p>not verbatim, but I've seen a lot of similar slice walking to get to a value</p>
+
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre style="display: none"><span>package main
+
+import "fmt"
+
+var myMap = map[string]string{
+	"test":   "123",
+	"wanted": "got it fast!",
+	"other":  "xxx",
+}
+
+</span></pre><pre contenteditable="true" spellcheck="false"><span num="11">func main() {</span>
 <span num="12">    keys := make([]string, 0, len(myMap))</span>
 <span num="13">    values := make([]string, 0, len(myMap))</span>
 <span num="14"></span>
@@ -230,20 +476,34 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 <span num="28">    fmt.Println("value:", values[wantedIndex])</span>
 <span num="29">}</span>
 </pre>
-</div>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
-      <span class="pagenumber">7</span>
+      <span class="pagenumber">13</span>
       </article>
   
   
   
-      <article>
+      <article class="">
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./Don&#39;t do this!_files/slices-hammer.png">
+</div>
+
+      
+      <span class="pagenumber">14</span>
+      </article>
+  
+  
+  
+      <article class="">
       
         <h3>floats</h3>
         <p>As with any language that uses the IEEE 754, floats are "fun"</p>
 
-  <div class="code" contenteditable="true" spellcheck="false">
+  <div class="code playground" contenteditable="true" spellcheck="false">
 <pre contenteditable="true" spellcheck="false"><span num="1">package main</span>
 <span num="2"></span>
 <span num="3">import "fmt"</span>
@@ -259,26 +519,44 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 <span num="13">func main() {</span>
 <span num="14">    x, y, z := 0.1, 0.2, 0.3</span>
 <span num="15"></span>
-<span num="16">    fmt.Println("x + y == z ?", x+y == z)</span>
+<span num="16">    fmt.Println("0.1 + 0.2 == 0.3 ?", x+y == z)</span>
 <span num="17">    fmt.Println("'smart' sum equals ?", smartSumEqual(x, y, z))</span>
 <span num="18">    fmt.Println("actual sum equals ?", actualSolution(x, y, z))</span>
 <span num="19">}</span>
 </pre>
-</div>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
-      <span class="pagenumber">8</span>
+      <span class="pagenumber">15</span>
       </article>
   
   
   
-      <article>
+      <article class="">
       
         <h3>callable structs?!</h3>
         <p>Just calling some methods on a struct, nothing to see here.. wait, wat?!</p>
 
-  <div class="code" contenteditable="true" spellcheck="false">
-<pre contenteditable="true" spellcheck="false"><span num="19">func main() {</span>
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre style="display: none"><span>package main
+
+import "fmt"
+
+type ImAStructTrustMe func()
+
+func (ImAStructTrustMe) DoStuff() {
+	fmt.Println("doing")
+}
+
+func (ImAStructTrustMe) AnotherMethod() {
+	fmt.Println("much lol")
+}
+
+var myStruct ImAStructTrustMe = func() {
+	fmt.Println("WTF?!")
+}
+
+</span></pre><pre contenteditable="true" spellcheck="false"><span num="19">func main() {</span>
 <span num="20">    myStruct.DoStuff()</span>
 <span num="21">    myStruct.AnotherMethod()</span>
 <span num="22"></span>
@@ -286,21 +564,25 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 <span num="24">    <b>myStruct()</b></span>
 <span num="25">}</span>
 </pre>
-</div>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
-      <span class="pagenumber">9</span>
+      <span class="pagenumber">16</span>
       </article>
   
   
   
-      <article>
+      <article class="">
       
         <h3>funcs with methods</h3>
         <p>Who would do this? (any why?!)</p>
 
-  <div class="code" contenteditable="true" spellcheck="false">
-<pre contenteditable="true" spellcheck="false"><span num="5">type ImAStructTrustMe func()</span>
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre style="display: none"><span>package main
+
+import "fmt"
+
+</span></pre><pre contenteditable="true" spellcheck="false"><span num="5">type ImAStructTrustMe func()</span>
 <span num="6"></span>
 <span num="7">func (ImAStructTrustMe) DoStuff() {</span>
 <span num="8">    fmt.Println("doing")</span>
@@ -322,20 +604,20 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 <span num="24">    myStruct()</span>
 <span num="25">}</span>
 </pre>
-</div>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
-      <span class="pagenumber">10</span>
+      <span class="pagenumber">17</span>
       </article>
   
   
   
-      <article>
+      <article class="">
       
         <h3>nil by default</h3>
         <p>It's pretty easy to forget to initialize a <code>map</code>, <code>slice</code> or <code>chan</code></p>
 
-  <div class="code" contenteditable="true" spellcheck="false">
+  <div class="code playground" contenteditable="true" spellcheck="false">
 <pre contenteditable="true" spellcheck="false"><span num="1">package main</span>
 <span num="2"></span>
 <span num="3">func main() {</span>
@@ -344,11 +626,15 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 <span num="6">    myMap["key"] = "value"</span>
 <span num="7">}</span>
 </pre>
-</div>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 <p>Especially since other values are initialized by default</p>
 
-  <div class="code" contenteditable="true" spellcheck="false">
-<pre contenteditable="true" spellcheck="false"><span num="5">type aStruct struct {</span>
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre style="display: none"><span>package main
+
+import "fmt"
+
+</span></pre><pre contenteditable="true" spellcheck="false"><span num="5">type aStruct struct {</span>
 <span num="6">    anInt   int</span>
 <span num="7">    aString string</span>
 <span num="8">}</span>
@@ -359,21 +645,59 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 <span num="13">    fmt.Println(s)</span>
 <span num="14">}</span>
 </pre>
-</div>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
-      <span class="pagenumber">11</span>
+      <span class="pagenumber">18</span>
       </article>
   
   
   
-      <article>
+      <article class="">
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./Don&#39;t do this!_files/nil-fine.png">
+</div>
+
+      
+      <span class="pagenumber">19</span>
+      </article>
+  
+  
+  
+      <article class="">
       
         <h3>easy race</h3>
         <p>This should return 200 every time, right? <strong>right?!</strong></p>
 
-  <div class="code" contenteditable="true" spellcheck="false">
-<pre contenteditable="true" spellcheck="false"><span num="25">func main() {</span>
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre style="display: none"><span>package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+type SharedInt struct {
+	mu  sync.Mutex
+	val int
+}
+
+func (si *SharedInt) Val() int {
+	si.mu.Lock()
+	defer si.mu.Unlock() // 🔒
+	return si.val        // 🔒
+}
+
+func (si *SharedInt) SetVal(val int) {
+	si.mu.Lock()
+	defer si.mu.Unlock() // 🔒
+	si.val = val         // 🔒
+}
+
+</span></pre><pre contenteditable="true" spellcheck="false"><span num="25">func main() {</span>
 <span num="26">    myInt := &amp;SharedInt{}</span>
 <span num="27"></span>
 <span num="28">    wg := sync.WaitGroup{}</span>
@@ -387,15 +711,15 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 <span num="36">    fmt.Println(myInt.val)</span>
 <span num="37">}</span>
 </pre>
-</div>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
-      <span class="pagenumber">12</span>
+      <span class="pagenumber">20</span>
       </article>
   
   
   
-      <article>
+      <article class="">
       
         <h3>easy race: internals</h3>
         <p>This seems correct...</p>
@@ -421,12 +745,12 @@ Also everything after the <code>;</code> isn't actually deffered</p>
 </div>
 
       
-      <span class="pagenumber">13</span>
+      <span class="pagenumber">21</span>
       </article>
   
   
   
-      <article>
+      <article class="">
       
         <h3>easy race: what is actually going on</h3>
         <p>While this pattern is common in other languages (hi, Java). It doesn't really work in go</p>
@@ -436,12 +760,159 @@ myInt.SetVal(v)
 </code></pre>
 
       
-      <span class="pagenumber">14</span>
+      <span class="pagenumber">22</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./Don&#39;t do this!_files/java-in-go.png">
+</div>
+
+      
+      <span class="pagenumber">23</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>slices</h3>
+        <p>Slices are <strong>pointers</strong> to the underlying data</p>
+
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre style="display: none"><span>package main
+
+import "fmt"
+
+</span></pre><pre contenteditable="true" spellcheck="false"><span num="5">func main() {</span>
+<span num="6">    a := []int{1, 2, 3, 4}</span>
+<span num="7">    b := a[:2] /* [1, 2] */</span>
+<span num="8">    c := a[2:] /* [3, 4] */</span>
+<span num="9"></span>
+<span num="10">    <b>b = append(b, 5)</b></span>
+<span num="11"></span>
+<span num="12">    fmt.Println(a)</span>
+<span num="13">    fmt.Println(b)</span>
+<span num="14">    fmt.Println(c)</span>
+<span num="15">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">24</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>structural typing for structs</h3>
+        <p>Structural typing seems a bit inconsistent...</p>
+
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre style="display: none"><span>package main
+
+</span></pre><pre contenteditable="true" spellcheck="false"><span num="3">type (</span>
+<span num="4">    x struct{ s string }</span>
+<span num="5">    y struct{ s string }   // try adding another field</span>
+<span num="6">    <b>z = struct{ s string } // type alias</b></span>
+<span num="7">)</span>
+<span num="8"></span>
+<span num="9">func f(p struct{ s string }) {}</span>
+<span num="10">func g(p x)                  {}</span>
+<span num="11">func d(p z)                  {}</span>
+<span num="12"></span>
+<span num="13">func do() {</span>
+<span num="14">    f(x{})</span>
+<span num="15">    f(y{})</span>
+<span num="16"></span>
+<span num="17">    g(x{})</span>
+<span num="18">    <b>g(y{}) // error: cannot use y as x</b></span>
+<span num="19"></span>
+<span num="20">    d(x{})</span>
+<span num="21">    d(y{})</span>
+<span num="22">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">25</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>union types?!</h3>
+        <p>No, this is just a way to define type constraints for generics</p>
+
+  <div class="code playground" contenteditable="true" spellcheck="false">
+<pre contenteditable="true" spellcheck="false"><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import "fmt"</span>
+<span num="4"></span>
+<span num="5">type point struct{ x, y float64 }</span>
+<span num="6"></span>
+<span num="7">type union interface {</span>
+<span num="8">    string | int | bool | point</span>
+<span num="9">}</span>
+<span num="10"></span>
+<span num="11">func use[T union](p T) {</span>
+<span num="12">    fmt.Println(p)</span>
+<span num="13">}</span>
+<span num="14"></span>
+<span num="15">func main() {</span>
+<span num="16">    use("what?")</span>
+<span num="17">    use(5) // change to 5.1</span>
+<span num="18">    use(true)</span>
+<span num="19">    use(point{x: 3.14, y: 2.71})</span>
+<span num="20">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">26</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>Useful links &amp; sources</h3>
+        <ul>
+<li><a href="https://blogtitle.github.io/lets-go-to-go2/" target="_blank" rel="noopener">Why not "functional" go</a></li>
+<li><a href="https://blogtitle.github.io/sneaky-race-conditions-and-granular-locks/" target="_blank" rel="noopener">Sneaky race conditions with locks</a></li>
+<li><a href="https://blogtitle.github.io/go-slices-gotchas/" target="_blank" rel="noopener">Slides gotchas</a></li>
+<li><a href="https://jub0bs.com/posts/2025-02-28-cost-of-panic-recover/" target="_blank" rel="noopener">Abusing panic/recover</a></li>
+<li><a href="https://github.com/golang/go/issues/45346#issuecomment-862505803" target="_blank" rel="noopener">Type constraint unions</a></li>
+</ul>
+
+      
+      <span class="pagenumber">27</span>
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./Don&#39;t do this!_files/logging.png">
+</div>
+
+      
+      <span class="pagenumber">28</span>
       </article>
   
   
 
-      <article>
+      <article class="">
         <h3>Thank you</h3>
         
           <div class="presenter">
@@ -470,6 +941,8 @@ myInt.SetVal(v)
       (Press 'H' or navigate to hide this message.)
     </div>
 
+    
+    <script src="./Don&#39;t do this!_files/play.js"></script>
     
 
     <script>

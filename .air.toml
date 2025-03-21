@@ -12,7 +12,7 @@ exclude_file = []
 exclude_regex = ["_test.go"]
 exclude_unchanged = false
 follow_symlink = false
-full_bin = "present -play=false"
+full_bin = "present -http=localhost:3999"
 include_dir = []
 include_ext = ["tmpl", "css", "js", "html", "slide"]
 include_file = []

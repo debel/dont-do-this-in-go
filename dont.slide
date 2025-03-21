@@ -11,6 +11,24 @@ Also everything after the `;` isn't actually deffered
 
 .play -edit defer.go /^func x1/, HLxxx
 
+## abusing panic/recover
+
+.play -edit ./abuse_panic.go /^func ClimbAllPanicRecover/,
+
+##
+
+.image ./images/context.jpg
+
+## leaky sentinel errors
+
+Sentinel errors aren't bad, but can cause leaky abstractions
+
+.play -edit ./errors.go 8,
+
+##
+
+.image ./images/leaky-errors.png
+
 ## special errors
 
 This is a great pattern in theory. Unfortunately, go insists on making it harder...
@@ -39,6 +57,10 @@ Short answer: no.
 
 The operators variety would get so broad reading any code would require an immense amount of knowledge.
 
+##
+
+.image ./images/functional.png
+
 ## nested iterators
 
 This doesn't look so bad, right?
@@ -51,11 +73,19 @@ until you look under the hood 😱
 
 .code nested_iterators.go /^func nestedIterator/,/^}/ HLxxx
 
-## searching a map
+##
 
-when just getting a key from a map is too simple, but you need to look "smart"
+.image ./images/monads.png
+
+## when all you know is a 🔨
+
+not verbatim, but I've seen a lot of similar slice walking to get to a value
 
 .play -edit ./map_lookup.go /^func main/,
+
+##
+
+.image ./images/slices-hammer.png
 
 ## floats
 
@@ -85,6 +115,10 @@ Especially since other values are initialized by default
 
 .play -edit ./ok_by_default.go /^type/,
 
+##
+
+.image ./images/nil-fine.png
+
 ## easy race
 
 This should return 200 every time, right? **right?!**
@@ -107,3 +141,36 @@ v += 1 // 😱😱😱
 myInt.SetVal(v)
 ```
 
+##
+
+.image ./images/java-in-go.png
+
+## slices
+
+Slices are **pointers** to the underlying data
+
+.play -edit ./slices.go /^func main/,
+
+## structural typing for structs
+
+Structural typing seems a bit inconsistent...
+
+.play -edit ./struct_typing.go /^type/,
+
+## union types?!
+
+No, this is just a way to define type constraints for generics
+
+.play -edit ./union.go
+
+## Useful links & sources
+
+- [Why not "functional" go](https://blogtitle.github.io/lets-go-to-go2/)
+- [Sneaky race conditions with locks](https://blogtitle.github.io/sneaky-race-conditions-and-granular-locks/)
+- [Slides gotchas](https://blogtitle.github.io/go-slices-gotchas/)
+- [Abusing panic/recover](https://jub0bs.com/posts/2025-02-28-cost-of-panic-recover/)
+- [Type constraint unions](https://github.com/golang/go/issues/45346#issuecomment-862505803)
+
+##
+
+.image ./images/logging.png
