@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0034)http://localhost:3999/dont.slide#1 -->
+<!-- saved from url=(0035)http://localhost:3999/dont.slide#27 -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Don't do this!</title>
     
@@ -10,33 +10,17 @@
 
     
 
-    <script>
-      
-      if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
-        var _gaq = _gaq || [];
-        _gaq.push(["_setAccount", "UA-11222381-6"]);
-        _gaq.push(["b._setAccount", "UA-49880327-6"]);
-        window.trackPageview = function() {
-          _gaq.push(["_trackPageview", location.pathname+location.hash]);
-          _gaq.push(["b._trackPageview", location.pathname+location.hash]);
-        };
-        window.trackPageview();
-        window.trackEvent = function(category, action, opt_label, opt_value, opt_noninteraction) {
-          _gaq.push(["_trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
-          _gaq.push(["b._trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
-        };
-      }
-    </script>
+    <link href="./Don&#39;t do this!_files/css2" rel="stylesheet">
+    <link rel="stylesheet" href="./Don&#39;t do this!_files/tokyo-night-dark.min.css">
   <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1"><meta name="apple-mobile-web-app-capable" content="yes"></head>
 
   <body style="display: none" class="loaded">
 
-    <section class="slides layout-widescreen" style="transform: scale(0.7344);">
+    <section class="slides layout-widescreen" style="transform: scale(0.9792);">
 
-      <article class="current">
+      <article class="">
         <h1>Don't do this!</h1>
-        <h3>Stupid things you can do with golang</h3>
-        
+        <h3 id="subtitle">Stupid things you can do with golang</h3>
         
           <div class="presenter">
             
@@ -58,13 +42,14 @@
 
   
   
-      <article class="next">
+      <article class="">
       
         <h3>defer</h3>
         <p>Deffered functions are executed in <strong>reverse</strong> order.
 Also everything after the <code>;</code> isn't actually deffered</p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre style="display: none"><span>package main
 
 import "fmt"
@@ -97,7 +82,8 @@ func c(from string) {
 <span num="30">    x2()</span>
 <span num="31">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">2</span>
@@ -105,11 +91,12 @@ func c(from string) {
   
   
   
-      <article class="far-next">
+      <article class="">
       
         <h3>abusing panic/recover</h3>
         
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre style="display: none"><span>package main
 
 import "fmt"
@@ -137,7 +124,8 @@ func (m *Mountain) Climb() {
 <span num="25">    fmt.Println("at the peak!")</span>
 <span num="26">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">3</span>
@@ -165,6 +153,7 @@ func (m *Mountain) Climb() {
         <p>Sentinel errors aren't bad, but can cause leaky abstractions</p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre style="display: none"><span>package main
 
 import (
@@ -189,7 +178,8 @@ import (
 <span num="22">    }</span>
 <span num="23">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">5</span>
@@ -217,6 +207,7 @@ import (
         <p>This is a great pattern in theory. Unfortunately, go insists on making it harder...</p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre style="display: none"><span>package main
 
 import (
@@ -283,7 +274,8 @@ func DoSomethingThatMightFail(b bool) error {
 <span num="64">    }</span>
 <span num="65">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">7</span>
@@ -295,15 +287,15 @@ func DoSomethingThatMightFail(b bool) error {
       
         <h3>functional go</h3>
         <p>Adopting a functional style in go is possible, but is it desirable?</p>
-<pre><code class="language-go">RunPipe(3*time.Second, func(ctx context.Context, _ func()) {
-  urls := FromFile(ctx, "user_urls.txt")
-  bodies := Parallel(ctx, urls, 10, request)
-  parsed := Parallel(ctx, bodies, 3, parseJSON)
+<pre><code class="language-go hljs" data-highlighted="yes">RunPipe(<span class="hljs-number">3</span>*time.Second, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(ctx context.Context, _ <span class="hljs-keyword">func</span>()</span></span>) {
+  urls := FromFile(ctx, <span class="hljs-string">"user_urls.txt"</span>)
+  bodies := Parallel(ctx, urls, <span class="hljs-number">10</span>, request)
+  parsed := Parallel(ctx, bodies, <span class="hljs-number">3</span>, parseJSON)
   admins := Filter(ctx, parsed, isAdmin)
   entries := Map(ctx, admins, toJSON)
-  err := ToFile(ctx, entries, "admins.txt")
-    if err != nil {
-      return err
+  err := ToFile(ctx, entries, <span class="hljs-string">"admins.txt"</span>)
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+      <span class="hljs-keyword">return</span> err
     }
 })
 </code></pre>
@@ -336,6 +328,7 @@ func DoSomethingThatMightFail(b bool) error {
         <p>This doesn't look so bad, right?</p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre style="display: none"><span>package main
 
 import (
@@ -386,7 +379,8 @@ func nestedIterator(start, end, size int) iter.Seq[iter.Seq[int]] {
 <span num="48">    }</span>
 <span num="49">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">10</span>
@@ -400,6 +394,7 @@ func nestedIterator(start, end, size int) iter.Seq[iter.Seq[int]] {
         <p>until you look under the hood 😱</p>
 
   <div class="code">
+    
 <pre><span num="20">func nestedIterator(start, end, size int) iter.Seq[iter.Seq[int]] {</span>
 <span num="21">    return func(yield func(iter.Seq[int]) bool) {</span>
 <span num="22">        for i := start; i &lt;= end; i += size {</span>
@@ -418,7 +413,8 @@ func nestedIterator(start, end, size int) iter.Seq[iter.Seq[int]] {
 <span num="35">    }</span>
 <span num="36">}</span>
 </pre>
-</div>
+
+  </div>
 
       
       <span class="pagenumber">11</span>
@@ -446,6 +442,7 @@ func nestedIterator(start, end, size int) iter.Seq[iter.Seq[int]] {
         <p>not verbatim, but I've seen a lot of similar slice walking to get to a value</p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre style="display: none"><span>package main
 
 import "fmt"
@@ -476,7 +473,8 @@ var myMap = map[string]string{
 <span num="28">    fmt.Println("value:", values[wantedIndex])</span>
 <span num="29">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">13</span>
@@ -504,6 +502,7 @@ var myMap = map[string]string{
         <p>As with any language that uses the IEEE 754, floats are "fun"</p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre contenteditable="true" spellcheck="false"><span num="1">package main</span>
 <span num="2"></span>
 <span num="3">import "fmt"</span>
@@ -524,7 +523,8 @@ var myMap = map[string]string{
 <span num="18">    fmt.Println("actual sum equals ?", actualSolution(x, y, z))</span>
 <span num="19">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">15</span>
@@ -538,6 +538,7 @@ var myMap = map[string]string{
         <p>Just calling some methods on a struct, nothing to see here.. wait, wat?!</p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre style="display: none"><span>package main
 
 import "fmt"
@@ -564,7 +565,8 @@ var myStruct ImAStructTrustMe = func() {
 <span num="24">    <b>myStruct()</b></span>
 <span num="25">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">16</span>
@@ -578,6 +580,7 @@ var myStruct ImAStructTrustMe = func() {
         <p>Who would do this? (any why?!)</p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre style="display: none"><span>package main
 
 import "fmt"
@@ -604,7 +607,8 @@ import "fmt"
 <span num="24">    myStruct()</span>
 <span num="25">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">17</span>
@@ -618,6 +622,7 @@ import "fmt"
         <p>It's pretty easy to forget to initialize a <code>map</code>, <code>slice</code> or <code>chan</code></p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre contenteditable="true" spellcheck="false"><span num="1">package main</span>
 <span num="2"></span>
 <span num="3">func main() {</span>
@@ -626,10 +631,12 @@ import "fmt"
 <span num="6">    myMap["key"] = "value"</span>
 <span num="7">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 <p>Especially since other values are initialized by default</p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre style="display: none"><span>package main
 
 import "fmt"
@@ -645,7 +652,8 @@ import "fmt"
 <span num="13">    fmt.Println(s)</span>
 <span num="14">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">18</span>
@@ -673,6 +681,7 @@ import "fmt"
         <p>This should return 200 every time, right? <strong>right?!</strong></p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre style="display: none"><span>package main
 
 import (
@@ -711,7 +720,8 @@ func (si *SharedInt) SetVal(val int) {
 <span num="36">    fmt.Println(myInt.val)</span>
 <span num="37">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">20</span>
@@ -725,6 +735,7 @@ func (si *SharedInt) SetVal(val int) {
         <p>This seems correct...</p>
 
   <div class="code">
+    
 <pre><span num="8">type SharedInt struct {</span>
 <span num="9">    mu  sync.Mutex</span>
 <span num="10">    val int</span>
@@ -742,7 +753,8 @@ func (si *SharedInt) SetVal(val int) {
 <span num="22">    si.val = val         // 🔒</span>
 <span num="23">}</span>
 </pre>
-</div>
+
+  </div>
 
       
       <span class="pagenumber">21</span>
@@ -754,8 +766,8 @@ func (si *SharedInt) SetVal(val int) {
       
         <h3>easy race: what is actually going on</h3>
         <p>While this pattern is common in other languages (hi, Java). It doesn't really work in go</p>
-<pre><code class="language-go">v := myInt.Val()
-v += 1 // 😱😱😱
+<pre><code class="language-go hljs" data-highlighted="yes">v := myInt.Val()
+v += <span class="hljs-number">1</span> <span class="hljs-comment">// 😱😱😱</span>
 myInt.SetVal(v)
 </code></pre>
 
@@ -785,6 +797,7 @@ myInt.SetVal(v)
         <p>Slices are <strong>pointers</strong> to the underlying data</p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre style="display: none"><span>package main
 
 import "fmt"
@@ -801,7 +814,8 @@ import "fmt"
 <span num="14">    fmt.Println(c)</span>
 <span num="15">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">24</span>
@@ -809,12 +823,13 @@ import "fmt"
   
   
   
-      <article class="">
+      <article class="far-past">
       
         <h3>structural typing for structs</h3>
         <p>Structural typing seems a bit inconsistent...</p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre style="display: none"><span>package main
 
 </span></pre><pre contenteditable="true" spellcheck="false"><span num="3">type (</span>
@@ -838,7 +853,8 @@ import "fmt"
 <span num="21">    d(y{})</span>
 <span num="22">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">25</span>
@@ -846,12 +862,13 @@ import "fmt"
   
   
   
-      <article class="">
+      <article class="past">
       
         <h3>union types?!</h3>
         <p>No, this is just a way to define type constraints for generics</p>
 
   <div class="code playground" contenteditable="true" spellcheck="false">
+    
 <pre contenteditable="true" spellcheck="false"><span num="1">package main</span>
 <span num="2"></span>
 <span num="3">import "fmt"</span>
@@ -873,7 +890,8 @@ import "fmt"
 <span num="19">    use(point{x: 3.14, y: 2.71})</span>
 <span num="20">}</span>
 </pre>
-</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  </div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
 
       
       <span class="pagenumber">26</span>
@@ -881,13 +899,13 @@ import "fmt"
   
   
   
-      <article class="">
+      <article class="current">
       
         <h3>Useful links &amp; sources</h3>
         <ul>
 <li><a href="https://blogtitle.github.io/lets-go-to-go2/" target="_blank" rel="noopener">Why not "functional" go</a></li>
 <li><a href="https://blogtitle.github.io/sneaky-race-conditions-and-granular-locks/" target="_blank" rel="noopener">Sneaky race conditions with locks</a></li>
-<li><a href="https://blogtitle.github.io/go-slices-gotchas/" target="_blank" rel="noopener">Slides gotchas</a></li>
+<li><a href="https://blogtitle.github.io/go-slices-gotchas/" target="_blank" rel="noopener">Slices gotchas</a></li>
 <li><a href="https://jub0bs.com/posts/2025-02-28-cost-of-panic-recover/" target="_blank" rel="noopener">Abusing panic/recover</a></li>
 <li><a href="https://github.com/golang/go/issues/45346#issuecomment-862505803" target="_blank" rel="noopener">Type constraint unions</a></li>
 </ul>
@@ -898,7 +916,7 @@ import "fmt"
   
   
   
-      <article class="">
+      <article class="next">
       
         <h3></h3>
         
@@ -912,8 +930,8 @@ import "fmt"
   
   
 
-      <article class="">
-        <h3>Thank you</h3>
+      <article class="thanks far-next">
+        <h1>Thank you!</h1>
         
           <div class="presenter">
             
@@ -945,16 +963,9 @@ import "fmt"
     <script src="./Don&#39;t do this!_files/play.js"></script>
     
 
-    <script>
-      (function() {
-        
-        if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
-          var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true;
-          ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
-          var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
-        }
-      })();
-    </script>
+    <script src="./Don&#39;t do this!_files/highlight.min.js"></script>
+    <script src="./Don&#39;t do this!_files/go.min.js"></script>
+    <script>hljs.highlightAll();</script>
   
 
 <link rel="stylesheet" type="text/css" href="./Don&#39;t do this!_files/css"><link rel="stylesheet" type="text/css" href="./Don&#39;t do this!_files/styles.css"></body></html>

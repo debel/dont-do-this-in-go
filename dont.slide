@@ -9,11 +9,11 @@ Mihail Mikov
 Deffered functions are executed in **reverse** order.
 Also everything after the `;` isn't actually deffered
 
-.play -edit defer.go /^func x1/, HLxxx
+.play -edit ./examples/defer.go /^func x1/, HLxxx
 
 ## abusing panic/recover
 
-.play -edit ./abuse_panic.go /^func ClimbAllPanicRecover/,
+.play -edit ./examples/abuse_panic.go /^func ClimbAllPanicRecover/,
 
 ##
 
@@ -23,7 +23,7 @@ Also everything after the `;` isn't actually deffered
 
 Sentinel errors aren't bad, but can cause leaky abstractions
 
-.play -edit ./errors.go 8,
+.play -edit ./examples/errors.go 8,
 
 ##
 
@@ -33,7 +33,7 @@ Sentinel errors aren't bad, but can cause leaky abstractions
 
 This is a great pattern in theory. Unfortunately, go insists on making it harder...
 
-.play -edit special_error.go /^func main/,
+.play -edit ./examples/special_error.go /^func main/,
 
 ## functional go
 
@@ -65,13 +65,13 @@ The operators variety would get so broad reading any code would require an immen
 
 This doesn't look so bad, right?
 
-.play -edit nested_iterators.go /^func main/,
+.play -edit ./examples/nested_iterators.go /^func main/,
 
 ## nested iterators: implementation
 
 until you look under the hood 😱
 
-.code nested_iterators.go /^func nestedIterator/,/^}/ HLxxx
+.code ./examples/nested_iterators.go /^func nestedIterator/,/^}/ HLxxx
 
 ##
 
@@ -81,7 +81,7 @@ until you look under the hood 😱
 
 not verbatim, but I've seen a lot of similar slice walking to get to a value
 
-.play -edit ./map_lookup.go /^func main/,
+.play -edit ./examples/map_lookup.go /^func main/,
 
 ##
 
@@ -91,29 +91,29 @@ not verbatim, but I've seen a lot of similar slice walking to get to a value
 
 As with any language that uses the IEEE 754, floats are "fun"
 
-.play -edit ./floats.go
+.play -edit ./examples/floats.go
 
 ## callable structs?!
 
 Just calling some methods on a struct, nothing to see here.. wait, wat?!
 
-.play -edit ./func_with_methods.go /^func main/, HLxxx
+.play -edit ./examples/func_with_methods.go /^func main/, HLxxx
 
 ## funcs with methods
 
 Who would do this? (any why?!)
 
-.play -edit ./func_with_methods.go /^type ImAStructTrustMe/,
+.play -edit ./examples/func_with_methods.go /^type ImAStructTrustMe/,
 
 ## nil by default
 
 It's pretty easy to forget to initialize a `map`, `slice` or `chan`
 
-.play -edit ./nil_by_default.go
+.play -edit ./examples/nil_by_default.go
 
 Especially since other values are initialized by default
 
-.play -edit ./ok_by_default.go /^type/,
+.play -edit ./examples/ok_by_default.go /^type/,
 
 ##
 
@@ -123,13 +123,13 @@ Especially since other values are initialized by default
 
 This should return 200 every time, right? **right?!**
 
-.play -edit ./race.go /^func main/,
+.play -edit ./examples/race.go /^func main/,
 
 ## easy race: internals
 
 This seems correct...
 
-.code ./race.go /^type/,24
+.code ./examples/race.go /^type/,24
 
 ## easy race: what is actually going on
 
@@ -149,25 +149,25 @@ myInt.SetVal(v)
 
 Slices are **pointers** to the underlying data
 
-.play -edit ./slices.go /^func main/,
+.play -edit ./examples/slices.go /^func main/,
 
 ## structural typing for structs
 
 Structural typing seems a bit inconsistent...
 
-.play -edit ./struct_typing.go /^type/,
+.play -edit ./examples/struct_typing.go /^type/,
 
 ## union types?!
 
 No, this is just a way to define type constraints for generics
 
-.play -edit ./union.go
+.play -edit ./examples/union.go
 
 ## Useful links & sources
 
 - [Why not "functional" go](https://blogtitle.github.io/lets-go-to-go2/)
 - [Sneaky race conditions with locks](https://blogtitle.github.io/sneaky-race-conditions-and-granular-locks/)
-- [Slides gotchas](https://blogtitle.github.io/go-slices-gotchas/)
+- [Slices gotchas](https://blogtitle.github.io/go-slices-gotchas/)
 - [Abusing panic/recover](https://jub0bs.com/posts/2025-02-28-cost-of-panic-recover/)
 - [Type constraint unions](https://github.com/golang/go/issues/45346#issuecomment-862505803)
 

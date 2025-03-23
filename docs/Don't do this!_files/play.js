@@ -17,7 +17,7 @@ here's a skeleton implementation of a playground transport.
                 return {
                         Run: function(body, output, options) {
                                 // Compile and run the program 'body' with 'options'.
-				// Call the 'output' callback to display program output.
+        // Call the 'output' callback to display program output.
                                 return {
                                         Kill: function() {
                                                 // Kill the running program.
@@ -27,21 +27,21 @@ here's a skeleton implementation of a playground transport.
                 };
         }
 
-	// The output callback is called multiple times, and each time it is
-	// passed an object of this form.
+  // The output callback is called multiple times, and each time it is
+  // passed an object of this form.
         var write = {
                 Kind: 'string', // 'start', 'stdout', 'stderr', 'end'
                 Body: 'string'  // content of write or end status message
         }
 
-	// The first call must be of Kind 'start' with no body.
-	// Subsequent calls may be of Kind 'stdout' or 'stderr'
-	// and must have a non-null Body string.
-	// The final call should be of Kind 'end' with an optional
-	// Body string, signifying a failure ("killed", for example).
+  // The first call must be of Kind 'start' with no body.
+  // Subsequent calls may be of Kind 'stdout' or 'stderr'
+  // and must have a non-null Body string.
+  // The final call should be of Kind 'end' with an optional
+  // Body string, signifying a failure ("killed", for example).
 
-	// The output callback must be of this form.
-	// See PlaygroundOutput (below) for an implementation.
+  // The output callback must be of this form.
+  // See PlaygroundOutput (below) for an implementation.
         function outputCallback(write) {
         }
 */
@@ -98,14 +98,14 @@ function HTTPTransport(enableVet) {
         next();
         return;
       }
-      timeout = setTimeout(function() {
+      timeout = setTimeout(function () {
         output({ Kind: e.Kind, Body: e.Message });
         next();
       }, e.Delay / 1000000);
     }
     next();
     return {
-      Stop: function() {
+      Stop: function () {
         clearTimeout(timeout);
       },
     };
@@ -125,7 +125,7 @@ function HTTPTransport(enableVet) {
 
   var seq = 0;
   return {
-    Run: function(body, output, options) {
+    Run: function (body, output, options) {
       seq++;
       var cur = seq;
       var playing;
@@ -133,7 +133,7 @@ function HTTPTransport(enableVet) {
         type: 'POST',
         data: { version: 2, body: body, withVet: enableVet },
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
           if (seq != cur) return;
           if (!data) return;
           if (playing != null) playing.Stop();
@@ -177,7 +177,7 @@ function HTTPTransport(enableVet) {
             data: { body: body },
             type: 'POST',
             dataType: 'json',
-            success: function(dataVet) {
+            success: function (dataVet) {
               if (dataVet.Errors) {
                 // inject errors from the vet as the first events in the output
                 data.Events.unshift({
@@ -193,17 +193,17 @@ function HTTPTransport(enableVet) {
               }
               playing = playback(output, data);
             },
-            error: function() {
+            error: function () {
               playing = playback(output, data);
             },
           });
         },
-        error: function() {
+        error: function () {
           error(output, 'Error communicating with remote server.');
         },
       });
       return {
-        Kill: function() {
+        Kill: function () {
           if (playing != null) playing.Stop();
           output({ Kind: 'end', Body: 'killed' });
         },
@@ -225,11 +225,11 @@ function SocketTransport() {
     websocket = new WebSocket('wss://' + window.location.host + '/socket');
   }
 
-  websocket.onclose = function() {
+  websocket.onclose = function () {
     console.log('websocket connection closed');
   };
 
-  websocket.onmessage = function(e) {
+  websocket.onmessage = function (e) {
     var m = JSON.parse(e.data);
     var output = outputs[m.Id];
     if (output === null) return;
@@ -245,13 +245,13 @@ function SocketTransport() {
   }
 
   return {
-    Run: function(body, output, options) {
+    Run: function (body, output, options) {
       var thisID = id + '';
       id++;
       outputs[thisID] = output;
       send({ Id: thisID, Kind: 'run', Body: body, Options: options });
       return {
-        Kill: function() {
+        Kill: function () {
           send({ Id: thisID, Kind: 'kill' });
         },
       };
@@ -262,7 +262,7 @@ function SocketTransport() {
 function PlaygroundOutput(el) {
   'use strict';
 
-  return function(write) {
+  return function (write) {
     if (write.Kind == 'start') {
       el.innerHTML = '';
       return;
@@ -307,7 +307,7 @@ function PlaygroundOutput(el) {
   };
 }
 
-(function() {
+(function () {
   function lineHighlight(error) {
     var regex = /prog.go:([0-9]+)/g;
     var r = regex.exec(error);
@@ -319,7 +319,7 @@ function PlaygroundOutput(el) {
     }
   }
   function highlightOutput(wrappedOutput) {
-    return function(write) {
+    return function (write) {
       if (write.Body) lineHighlight(write.Body);
       wrappedOutput(write);
     };
@@ -376,7 +376,7 @@ function PlaygroundOutput(el) {
           break;
         }
       }
-      setTimeout(function() {
+      setTimeout(function () {
         insertTabs(tabs);
       }, 1);
     }
@@ -390,7 +390,7 @@ function PlaygroundOutput(el) {
       e.preventDefault();
 
       // Share and save
-      share(function(url) {
+      share(function (url) {
         window.location.href = url + '.go?download=true';
       });
 
@@ -502,7 +502,7 @@ function PlaygroundOutput(el) {
         data: data,
         type: 'POST',
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
           if (data.Error) {
             setError(data.Error);
           } else {
@@ -528,7 +528,7 @@ function PlaygroundOutput(el) {
         data: sharingData,
         type: 'POST',
         contentType: 'text/plain; charset=utf-8',
-        complete: function(xhr) {
+        complete: function (xhr) {
           sharing = false;
           if (xhr.status != 200) {
             alert('Server error; try again.');
@@ -572,18 +572,18 @@ function PlaygroundOutput(el) {
       if (opts.shareURLEl) {
         shareURL = $(opts.shareURLEl).hide();
       }
-      $(opts.shareEl).click(function() {
+      $(opts.shareEl).click(function () {
         share();
       });
     }
 
     if (opts.toysEl !== null) {
-      $(opts.toysEl).bind('change', function() {
+      $(opts.toysEl).bind('change', function () {
         var toy = $(this).val();
         $.ajax('/doc/play/' + toy, {
           processData: false,
           type: 'GET',
-          complete: function(xhr) {
+          complete: function (xhr) {
             if (xhr.status != 200) {
               alert('Server error; try again.');
               return;
